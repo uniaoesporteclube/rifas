@@ -66,9 +66,10 @@
         document.getElementById('finalize-payment').addEventListener('click', function() {
         var selectedValue = selectedQuantity;
         var total = selectedQuantity * 10;
+        var amount = selectedQuantity;
     
     // Constrói a URL de checkout corretamente
-        var checkoutUrl = "https://uniaoesporteclube.github.io/checkout?payment=" + total + "&product=Rifa%20União" + "&price=" + selectedValue;
+        var checkoutUrl = "https://uniaoesporteclube.github.io/checkout?amount=" + amount + "&payment=" + total + "&product=Rifa%20União" + "&price=" + selectedValue;
         window.location.href = checkoutUrl;
         });
 
