@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rifa União</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="bg-white text-gray-800 font-sans">
+    <div class="bg-white p-6 rounded-lg">
+        <div class="flex items-center justify-center mb-4">
+            <i class="fas fa-question-circle text-gray-500 mr-2"></i>
+            <span class="text-gray-700">Precisa de ajuda para comprar?</span>
+        </div>
+        <div class="bg-gray-100 p-4 rounded-lg mb-6 flex items-center">
+            <i class="fas fa-info-circle text-purple-500 mr-2"></i>
+            <span class="text-gray-700">Veja todos os<a href="#" class="text-purple-500"> prêmios disponíveis</a> e confira o regulamento do sorteio</span>
+            <i class="fas fa-chevron-right text-gray-500 ml-auto"></i>
+        </div>
+        
+        <div class="mt-6">
+            <h2 class="text-lg font-semibold">Reserve as suas</h2>
+            <span class="text-gray-700">A quantidade de rifas é limitada, reserve a quantidade que deseja.</span>
+            <div id="number-buttons" class="grid grid-cols-3 gap-4 mt-4">
+                <!-- Botões gerados dinamicamente -->
+            </div>
+            <div id="custom-input" class="hidden mt-4">
+           <span class="text-gray-700">Quantas rifas você deseja comprar?</span>
+          <input type="number" id="custom-quantity" 
+           class="mt- block w-full rounded-lg border border-gray-300 py-2 px-4 focus:border-purple-500 focus:ring-purple-500 sm:text-sm" 
+           placeholder="15" min="1">
+           </div>
+        </div>
+       
+        <div class="mt-6">
+            <h2 class="text-lg font-semibold">Como funciona?</h2>
+            <ol class="list-decimal list-inside text-gray-500 mt-2">
+                <li>Escolha a quantidade de números que deseja;</li>
+                <li>Verifique o valor total;</li>
+                <li>Clique em "Finalizar pagamento";</li>
+                <li>Pague pelo App do seu Banco;</li>
+                <li>Pronto! Seus números serão reservados automaticamente.</li>
+            </ol>
+        </div>
+        
+        <div class="mt-6">
+            <button id="finalize-payment" class="w-full bg-purple-600 text-white py-3 rounded-lg flex items-center justify-center" disabled>
+                <i class="fas fa-lock mr-2"></i> FINALIZAR PAGAMENTO R$ 0,00
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const costPerNumber = 20;
+        const maxButtons = 10;
+
+        const numberButtonsContainer = document.getElementById("number-buttons");
+        const finalizePaymentButton = document.getElementById("finalize-payment");
+        const customInputContainer = document.getElementById("custom-input");
+        const customQuantityInput = document.getElementById("custom-quantity");
+
+        let selectedQuantity = 0;
+        
+        // Nova forma de pagar
+        document.getElementById('finalize-payment').addEventListener('click', function() {
+        var selectedValue = selectedQuantity;
+        var total = selectedQuantity * 20;
+    
+    // Constrói a URL de checkout corretamente
+        var checkoutUrl = "https://connectstore.github.io/checkout?payment=" + total + "&product=Rifa%20União" + "&price=" + selectedValue;
+        window.location.href = checkoutUrl;
+        });
+
+        // Função para criar os botões de seleção
+        function createButtons() {
+            for (let i = 1; i <= maxButtons; i++) {
+                const button = document.createElement("button");
+                button.className = "border border-gray-300 rounded-lg py-2";
+                button.textContent = i.toString();
+                button.addEventListener("click", () => selectButton(button, i));
+                numberButtonsContainer.appendChild(button);
+            }
+
+            const customButton = document.createElement("button");
+            customButton.className = "border border-gray-300 rounded-lg py-2";
+            customButton.textContent = "Outros";
+            customButton.addEventListener("click", () => {
+                deselectAllButtons();
+                showCustomInput(customButton);
+            });
+            numberButtonsContainer.appendChild(customButton);
+        }
+
+        // Função para selecionar um botão
+        function selectButton(button, quantity) {
+            deselectAllButtons();
+            button.style.backgroundColor = "#f5f5f5";
+            selectedQuantity = quantity;
+            customInputContainer.classList.add("hidden");
+            updatePaymentButton();
+        }
+
+        // Função para exibir o campo personalizado
+        function showCustomInput(customButton) {
+            customButton.style.backgroundColor = "#f5f5f5";
+            selectedQuantity = 0;
+            customInputContainer.classList.remove("hidden");
+            customQuantityInput.value = "";
+            customQuantityInput.focus();
+            updatePaymentButton();
+        }
+
+        // Função para remover seleção de todos os botões
+        function deselectAllButtons() {
+            const buttons = numberButtonsContainer.querySelectorAll("button");
+            buttons.forEach(button => {
+                button.style.backgroundColor = ""; // Reseta a cor do botão
+            });
+        }
+
+        // Atualizar o botão de pagamento
+        function updatePaymentButton() {
+            if (selectedQuantity > 0) {
+                finalizePaymentButton.textContent = `FINALIZAR PAGAMENTO R$ ${(selectedQuantity * costPerNumber).toFixed(2)}`;
+                finalizePaymentButton.disabled = false;
+            } else if (customQuantityInput.value > 0) {
+                finalizePaymentButton.textContent = `FINALIZAR PAGAMENTO R$ ${(customQuantityInput.value * costPerNumber).toFixed(2)}`;
+                finalizePaymentButton.disabled = false;
+            } else {
+                finalizePaymentButton.textContent = `FINALIZAR PAGAMENTO R$ 0,00`;
+                finalizePaymentButton.disabled = true;
+            }
+        }
+
+        // Listener para o campo personalizado
+        customQuantityInput.addEventListener("input", (e) => {
+            selectedQuantity = parseInt(e.target.value) || 0;
+            updatePaymentButton();
+        });
+
+        // Inicializar os botões
+        createButtons();
+    </script>
+</body>
+</html>
