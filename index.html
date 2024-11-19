@@ -52,7 +52,7 @@
     </div>
 
     <script>
-        const costPerNumber = 20;
+        const costPerNumber = 10;
         const maxButtons = 10;
 
         const numberButtonsContainer = document.getElementById("number-buttons");
@@ -65,7 +65,7 @@
         // Nova forma de pagar
         document.getElementById('finalize-payment').addEventListener('click', function() {
         var selectedValue = selectedQuantity;
-        var total = selectedQuantity * 20;
+        var total = selectedQuantity * 10;
     
     // Constrói a URL de checkout corretamente
         var checkoutUrl = "https://uniaoesporteclube.github.io/checkout?payment=" + total + "&product=Rifa%20União" + "&price=" + selectedValue;
